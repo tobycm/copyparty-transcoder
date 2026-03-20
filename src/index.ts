@@ -45,6 +45,8 @@ const app = new Elysia()
         reencode,
         nvidiaHardwareAcceleration,
       });
+
+      return { success: true };
     },
     {
       body: t.Object({
