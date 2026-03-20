@@ -1,0 +1,15 @@
+body {
+    font-family: Ubuntu;
+    font-size: x-large;
+
+    background-color: #1e1e1e;
+    color: #feccde;
+
+
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    align-items: center;
+    text-align: center;
+}
