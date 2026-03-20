@@ -36,7 +36,7 @@ export async function transcodeVideo({ inputPath, outputPath, reencode, nvidiaHa
       ? nvidiaHardwareAcceleration
         ? [
             "-c:v",
-            videoInfo.codec === "h264" ? "copy" : "h264_nvenc",
+            "h264_nvenc",
             "-preset",
             "p5",
             "-rc",
@@ -58,8 +58,8 @@ export async function transcodeVideo({ inputPath, outputPath, reencode, nvidiaHa
           ]
         : [
             "-c:v",
-            videoInfo.codec === "h264" ? "copy" : "libx264",
-            "-pix_fmt", //
+            "libx264",
+            "-pix_fmt",
             "yuv420p",
             "-preset",
             "fast",
