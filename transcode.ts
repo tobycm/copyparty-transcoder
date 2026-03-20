@@ -19,12 +19,6 @@ export async function transcodeVideo({ inputPath, outputPath, reencode, nvidiaHa
   console.log(`📊 Resolution: ${videoInfo.width}x${videoInfo.height} @ ${videoInfo.fps.toFixed(2)} fps`);
   console.log(`🎥 Codec: ${videoInfo.codec}`);
 
-  // Discord doesn't support 60fps videos from NVENC, cap at 30fps for compatibility
-  const targetFps = videoInfo.fps > 30 ? 30 : videoInfo.fps;
-  if (targetFps < videoInfo.fps) {
-    console.log(`⚠️  Capping frame rate to ${targetFps}fps for Discord compatibility`);
-  }
-
   const command = [
     "ffmpeg",
     "-y",
@@ -49,12 +43,7 @@ export async function transcodeVideo({ inputPath, outputPath, reencode, nvidiaHa
             "qres",
             "-profile:v",
             "main",
-            "-r",
-            targetFps.toString(), // Cap frame rate for Discord compatibility
-            "-vf",
-            is10Bit
-              ? "tonemap_cuda=format=yuv420p:tonemap=hable:primaries=bt709:transfer=bt709:matrix=bt709,scale_cuda='trunc(iw/16)*16':'trunc(ih/16)*16'"
-              : "scale_cuda='trunc(iw/16)*16':'trunc(ih/16)*16'",
+            ...(is10Bit ? ["-vf", "tonemap_cuda=format=yuv420p:tonemap=hable:primaries=bt709:transfer=bt709:matrix=bt709"] : []),
           ]
         : [
             "-c:v",
@@ -64,8 +53,7 @@ export async function transcodeVideo({ inputPath, outputPath, reencode, nvidiaHa
             "-preset",
             "fast",
             "-crf",
-            "23",
-            ...(targetFps < videoInfo.fps ? ["-r", targetFps.toString()] : []),
+            "23", //
           ]
       : ["-c:v", "copy"]),
     "-c:a",
