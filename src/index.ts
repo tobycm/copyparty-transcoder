@@ -37,7 +37,7 @@ const app = new Elysia()
     ({ body }) => {
       const { filepath, reencode } = body;
 
-      const realFilePath = path.join(copypartyDir, filepath);
+      const realFilePath = path.join(copypartyDir, decodeURIComponent(filepath));
 
       transcodeVideo({
         inputPath: realFilePath,
